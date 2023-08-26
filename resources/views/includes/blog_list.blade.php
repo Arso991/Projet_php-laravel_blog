@@ -10,7 +10,7 @@
         <div class="col-md-4">
             <div class="card mb-4 box-shadow">
                 <div style="height: 225px">
-                    <img @if(!empty($item['image'])) src="{{$item['image']}}" @else src="{{$item['image']}}" @endif alt="" height="100px" style="width: 100%; height:100%; object-fit:cover" class="card-img-top">
+                    <img @if(!empty($item['picture'])) src="{{ asset($item['picture']) }}" @else src="{{$item['image']}}" @endif alt="" height="100px" style="width: 100%; height:100%; object-fit:cover" class="card-img-top">
                 </div>
                 <div class="card-body">
                     <p class="card-text">

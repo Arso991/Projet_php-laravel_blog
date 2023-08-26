@@ -35,11 +35,11 @@
     </div>
     @endif
         <h2 class="muted text-center mt-5">Vous pouvez ajouter votre article sur le blog des etudiants de l'ecole229</h2>
-        <form method="POST" action="{{ route('blogStore') }}" class="p-3 mt-2">
+        <form method="POST" action="{{ route('blogStore') }}" class="p-3 mt-2" enctype="multipart/form-data">
             @csrf
-            <input name="title" class="form-control mb-4" type="text" placeholder="Objet">
+            <input value="{{ old("title") }}" name="title" class="form-control mb-4" type="text" placeholder="Objet">
             <input name="picture" class="form-control mb-4" type="file" placeholder="Ajouter une image">
-            <textarea name="content" class="form-control mb-4" name="" rows="8" placeholder="Description"></textarea>
+            <textarea name="content" class="form-control mb-4" name="" rows="8" placeholder="Description">{{ old("content") }}</textarea>
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </form>
     </section>

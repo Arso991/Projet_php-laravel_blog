@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
 {
@@ -35,13 +36,38 @@ class BlogController extends Controller
 
         $validation = $request->validate([
             "content" => "required",
-            "title" => "required"
+            "title" => "required",
+            "picture" => "required|mimes:jpg,png"
         ]);
 
+        $file = $request->file("picture");
+        $image = null;
+        $name = $file->getClientOriginalName();
+        $size = $file->getSize();
+
+        if($request->hasFile("picture")){
+            $image = $file->store('avatar');
+        }
+
+        //Possibility1 avec storage
+        //$storage = Storage::disk("users");
+        //$s = $storage->put($name, file_get_contents($file));
+
+        //Possibility2 sans le storage
         
+
+        //Possibility3
+        //$s = $file->move(storage_path('users_public'), $name);
+
+        //Possibility4
+        //creer un dossier sois meme sur le filesysteme 
+
+        
+
         $save = Blog::create([
             "title" => $data['title'],
-            "content" => $data['content']
+            "content" => $data['content'],
+            "picture" => $image
         ]);
 
         return redirect()->route('index')->with("message", "Success saved !");
