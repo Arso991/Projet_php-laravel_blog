@@ -31,20 +31,20 @@ use Illuminate\Support\Facades\Route;
     return view('blog', compact('nom', 'id'));
 })->name('indexWithId'); */
 
-/* Route::controller(BlogController::class)->middleware('auth')->group(function(){
-    Route::get('/', 'index')->name('index')->middleware('auth');
+Route::controller(BlogController::class)->group(function(){
+    Route::get('/', 'index')->name('index');
     Route::get('/blog/{id?}', 'show' )->name('indexWithId');
     Route::post('/blog/store', 'store')->name('blogStore');
     Route::get('/create-blog', 'createBlog')->name('createBlog');
-}); */
+});
 
-Route::get('/', [BlogController::class, "index"])->name('index')->middleware('auth');
+/* Route::get('/', [BlogController::class, "index"])->name('index')->middleware('auth');
 
 Route::get('/blog/{id?}', [BlogController::class,'show'])->name('indexWithId');
 
 Route::post('/blog/store', [BlogController::class,'store'])->name('blogStore');
 
-Route::get('/create-blog', [BlogController::class, 'createBlog'])->name('createBlog');
+Route::get('/create-blog', [BlogController::class, 'createBlog'])->name('createBlog'); */
 
 Route::get('login', [UserController::class, 'login'])->name('login');
 

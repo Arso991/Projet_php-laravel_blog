@@ -13,10 +13,10 @@
                     <img @if(!empty($item['picture'])) src="{{ asset($item['picture']) }}" @else src="{{$item['image']}}" @endif alt="" height="100px" style="width: 100%; height:100%; object-fit:cover" class="card-img-top">
                 </div>
                 <div class="card-body">
-                    <p class="card-text">
+                    <div class="card-text">
                         <h2 class="mb-3 text-muted"> {{$item['title']}} </h2>
-                        {{$item['content']}}
-                    </p>
+                        <p class="text-truncate">{{$item['content']}}</p>
+                    </div>
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="btn-group">
                             <a href="{{route('indexWithId', ['id'=>$item['id']])}}" class="btn btn-sm btn-outline-secondary">View</a>
