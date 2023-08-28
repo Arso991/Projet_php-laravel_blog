@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Blog;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
@@ -13,6 +14,13 @@ class BlogController extends Controller
     public function index(){
         $nom = 'Arso';
         $prenom = 'Boss';
+
+       /*  if(!Auth::check()){
+            return view('login');
+        } */
+
+        //ou appeler auth de middelware au niveau de la route
+
         $blogs_list = Blog::all();
 
         
@@ -27,6 +35,10 @@ class BlogController extends Controller
         $nom = 'Arso';
 
         $data = Blog::find($id); //Blog::where("id", $id)->first()
+        $ids = idsDB();
+
+        //$ids = Blog::pluck("id")
+
         return view('blog', compact('nom', 'id', 'data'));
     }
 

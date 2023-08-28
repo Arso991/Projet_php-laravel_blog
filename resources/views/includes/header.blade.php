@@ -9,5 +9,6 @@
     <p class="lead text-muted">
         Il s'agit de la page qui permettra d'explorer les contours de laravel avec les étudiants!
     </p>
+    <a href="{{ route('login') }}">Se connecter</a>
     <a href="{{ route('createBlog') }}" class="btn btn-primary" type="button">Ajouter un article</a>
 </div>
