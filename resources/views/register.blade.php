@@ -3,23 +3,28 @@
 @section("title", "Inscription")
 
 @section('content')
-                <form action="" method="POST" autocomplete="off">
+                <form action="{{ route('storeUser') }}" method="POST" autocomplete="off">
+                    @if (session("success"))
+                        <div class="alert alert-secondary text-center" role="alert">
+                            <strong>Message success</strong> <br>{{ session("success") }}
+                        </div>
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="" class="form-label">Nom</label>
-                        <input type="text" name="email" class="form-control" placeholder="Saisir votre Nom">
+                        <input type="text" value="{{ old('lastname') }}" name="lastname" class="form-control" placeholder="Saisir votre Nom">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Prénom</label>
-                        <input type="text" name="email" class="form-control" placeholder="Saisir votre prenom">
+                        <input type="text" value="{{ old('firstname') }}" name="firstname" class="form-control" placeholder="Saisir votre prenom">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>
-                        <input type="email" name="email" class="form-control" placeholder="Saisir votre mail">
+                        <input type="text" value="{{ old('email') }}" name="email" class="form-control" placeholder="Saisir votre mail">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Date de naissance</label>
-                        <input type="date" name="email" class="form-control" placeholder="Saisir votre date de naissance">
+                        <input type="date" value="{{ old('birthday') }}" name="birthday" class="form-control" placeholder="Saisir votre date de naissance">
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Mot de passe</label>
@@ -27,7 +32,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="" class="form-label">Confirmez mot de passe</label>
-                        <input type="password" name="password" class="form-control" placeholder="Confirmez votre mot de passe">
+                        <input type="password" name="password_confirmation" class="form-control" placeholder="Confirmez votre mot de passe">
                     </div>
                     <button type="submit" class="btn btn-primary float-end">Enrégistrer</button>
                 </form>

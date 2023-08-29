@@ -4,6 +4,11 @@
 
 @section('content')
                 <form action="" method="POST" autocomplete="off">
+                    @if (session("success"))
+                        <div class="alert alert-secondary text-center" role="alert">
+                            <strong>Message success</strong> <br>{{ session("success") }}
+                        </div>
+                    @endif
                     @csrf
                     <div class="mb-3">
                         <label for="" class="form-label">Email</label>

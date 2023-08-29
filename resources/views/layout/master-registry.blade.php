@@ -17,6 +17,7 @@
         </ul>
     </div>
     @endif
+
     <div style="width: 600px" class="card border-primary position-absolute top-50 start-50 translate-middle">
         <div>
             <div class="card-header text-center bg-primary text-white">
@@ -28,8 +29,6 @@
     
             </div>
         </div>
-        
-
     </div>
 </body>
 </html>

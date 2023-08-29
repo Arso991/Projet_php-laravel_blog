@@ -54,9 +54,14 @@ class BlogController extends Controller
 
         $file = $request->file("picture");
         $image = null;
+
+        //pour avoir le nom de l'image
         $name = $file->getClientOriginalName();
+        //pour avoir la taille de l'image
         $size = $file->getSize();
 
+        //verifier si dans request il y une donnée de type file qui porte le nom de picture
+        //si ca existe on l'enregistre dans la variable image
         if($request->hasFile("picture")){
             $image = $file->store('avatar');
         }

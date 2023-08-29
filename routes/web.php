@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
     return view('blog', compact('nom', 'id'));
 })->name('indexWithId'); */
 
-Route::controller(BlogController::class)->group(function(){
+Route::controller(BlogController::class)->middleware('auth')->group(function(){
     Route::get('/', 'index')->name('index');
     Route::get('/blog/{id?}', 'show' )->name('indexWithId');
     Route::post('/blog/store', 'store')->name('blogStore');
@@ -46,6 +46,9 @@ Route::post('/blog/store', [BlogController::class,'store'])->name('blogStore');
 
 Route::get('/create-blog', [BlogController::class, 'createBlog'])->name('createBlog'); */
 
-Route::get('login', [UserController::class, 'login'])->name('login');
-
-Route::get('register', [UserController::class, 'register'])->name('register');
+Route::controller(UserController::class)->prefix('user')->group(function(){
+    Route::get('/login', 'login')->name('login');
+    Route::get('/register', 'register')->name('register');
+    Route::post('/store/register', 'store')->name('storeUser');
+    Route::get('/verify_email/{email}', 'verify')->name('verifyEmail');
+});
