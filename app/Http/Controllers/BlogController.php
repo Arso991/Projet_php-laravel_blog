@@ -12,16 +12,38 @@ class BlogController extends Controller
 {
     //
     public function index(){
-        $nom = 'Arso';
-        $prenom = 'Boss';
+        $user = Auth::user();
+        $nom = $user ? $user->firstname:'';
+        $prenom = $user ? $user->lastname:'';
 
        /*  if(!Auth::check()){
             return view('login');
         } */
-
         //ou appeler auth de middelware au niveau de la route
 
+        //$blogs_list = Blog::all();
+
+        $blogs_list = Blog::where("user_id", $user->id)->get();
+
+        
+        return view('blog', compact("nom", "prenom", "blogs_list"));
+    }
+
+    public function all(){
+        $user = Auth::user();
+        $nom = $user ? $user->firstname:'';
+        $prenom = $user ? $user->lastname:'';
+
+       /*  if(!Auth::check()){
+            return view('login');
+        } */
+        //ou appeler auth de middelware au niveau de la route
+
+        //
+
         $blogs_list = Blog::all();
+
+        //$blogs_list = Blog::where("user_id", $user->id)->get();
 
         
         return view('blog', compact("nom", "prenom", "blogs_list"));
@@ -49,7 +71,7 @@ class BlogController extends Controller
         $validation = $request->validate([
             "content" => "required",
             "title" => "required",
-            "picture" => "required|mimes:jpg,png"
+            "picture" => "required|mimes:jpg,png",
         ]);
 
         $file = $request->file("picture");
@@ -84,7 +106,8 @@ class BlogController extends Controller
         $save = Blog::create([
             "title" => $data['title'],
             "content" => $data['content'],
-            "picture" => $image
+            "picture" => $image,
+            "user_id" => Auth::user()->id
         ]);
 
         return redirect()->route('index')->with("message", "Success saved !");

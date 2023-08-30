@@ -16,6 +16,7 @@
                     <a class="navbar-brand text-white bold" href="{{route('index')}}">BLOG</a>
                 </div>
                 <form class="d-flex">
+                    <a href="{{ route('logout') }}" class="btn btn-danger me-3">Deconnexion</a>
                     <input class="form-control me-3" type="search" placeholder="Rechercher un blog">
                     <button class="btn btn-success" type="submit">Rechercher</button>
                 </form>

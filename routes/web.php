@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(BlogController::class)->middleware('auth')->group(function(){
     Route::get('/', 'index')->name('index');
+    Route::get('/all', 'all')->name('all');
     Route::get('/blog/{id?}', 'show' )->name('indexWithId');
     Route::post('/blog/store', 'store')->name('blogStore');
     Route::get('/create-blog', 'createBlog')->name('createBlog');
@@ -48,7 +49,20 @@ Route::get('/create-blog', [BlogController::class, 'createBlog'])->name('createB
 
 Route::controller(UserController::class)->prefix('user')->group(function(){
     Route::get('/login', 'login')->name('login');
+
+    Route::get('/logout', 'logout')->name('logout');
+
     Route::get('/register', 'register')->name('register');
     Route::post('/store/register', 'store')->name('storeUser');
     Route::get('/verify_email/{email}', 'verify')->name('verifyEmail');
+
+    Route::post('/authentification', 'authentification')->name('authentification');
+
+    Route::get('/recovery', 'recovery')->name('recovery');
+
+    Route::post('/change_password', 'change')->name('change');
+
+    Route::get('/check_password/{email}', 'check')->name('check');
+
+    Route::post('/store_password/{email}', 'updatepassword')->name('storePassword');
 });

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
@@ -56,7 +57,6 @@ class UserController extends Controller
         );
 
         //envoie de l'url generer par mail pour activation du compte
-
         //send(prend en parametre la vue, params(ici c'est le nom de celui qui s'inscrire) et une fonction callback)
         Mail::send('mail',['url' => $url, "name"=>$data['lastname'].' '.$data['firstname']], function($message) use($data){
             //pour acceder au fichier mail dans config
@@ -96,5 +96,102 @@ class UserController extends Controller
         //retourne sur la page de connection avec un message
         return redirect()->route("login")->with("success", "Compte activé avec succès !");
     }
-    //
+    
+    //fonction qui mène sur la page de récupération de compte
+    public function recovery(){
+        return view('recovery');
+    }
+
+    public function change(Request $request){
+
+        $data = $request->all();
+
+        $request->validate([
+            'email' => array(
+                "required",
+                "regex:/^[\w\-\.]+@([\w\-]+\.)+[\w\-]{2,4}$/"
+            )
+            ]);
+
+            $email = $data['email'];
+
+            $exists = User::where('email', $email)->exists();
+
+            if($exists){
+                $host = URl::temporarySignedRoute('check', now() -> addMinutes(10), ['email' => $email]);
+
+                Mail::send('newpassword',['host'=>$host, 'email' => $email], function($message) use($data){
+                    $config = config('mail');
+                    $message->subject('Renouvellement de mot de passe !')
+                            ->from($config['from']['address'], $config['from']['name'])
+                            ->to($data['email']);
+                });
+            }else{
+                return redirect()->back()->with('error', 'Veuillez entrer une addresse mail valide');
+            }
+
+            return redirect()->back()->with("validate", "Veuillez consulter votre mail pour renouveler votre mot de passe");
+    }
+
+    public function check(Request $request, $email){
+
+        $user = User::where('email', $email);
+
+        if(!$user){
+            abort(404);
+        }
+
+        if(!$request->hasValidSignature()){
+            return redirect()->route('recovery')->with('failed', 'Votre lien a expiré, veuillez reéssayer');
+        }
+
+        return view('changepassword', compact('email'));
+        
+    }
+
+    public function updatepassword(Request $request, $email){
+        $user = User::where('email', $email)->first();
+
+        if(!$user){
+            abort(404);
+        }
+
+        $data = $request->all();
+
+        $request->validate([
+            'password' => array(
+                "required",
+                "regex:/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[@$!%*?&#^_;:,])[A-Za-z\d@$!%*?&#^_;:,].{8,}$/",
+                "confirmed:password_confirmation"
+            )
+            ]);
+
+            $user -> update([
+                "password" => Hash::make($data['password']),
+                "email_verified_at" => now()
+            ]);
+
+        return redirect()->back()->with('verified', 'Vous pouvez vous connecter avec votre nouveau mot de passe.');
+    }
+
+    public function authentification(Request $request){
+
+        $users = Auth::attempt([
+            'email'=>$request->email, 
+            'password'=>$request->password,
+            'email_verified'=>true
+        ]);
+
+        if($users){
+            return redirect()->route('index');
+        }
+
+        return redirect()->back()->with('error', '[Combinaison email/password invalide !]');
+        /* dd(Auth::user()); */
+    }
+
+    public function logout(){
+        Auth::logout();
+        return redirect()->route('login');
+    }
 }
