@@ -10,25 +10,29 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogController extends Controller
 {
-    //
+    //methode pour afficher la page d'acceuil
     public function index(){
+        //on recupere l'utilisateur qui est connecte avec la classe Auth
         $user = Auth::user();
-        $nom = $user ? $user->firstname:'';
-        $prenom = $user ? $user->lastname:'';
+        //condition ternaire, si l'user existe, ca recupere le nom sinon rien
+        $nom = $user ? $user->firstname :'';
+        $prenom = $user ? $user->lastname :'';
 
        /*  if(!Auth::check()){
             return view('login');
         } */
         //ou appeler auth de middelware au niveau de la route
 
-        //$blogs_list = Blog::all();
+        //$blogs_list = Blog::paginate(3);
 
-        $blogs_list = Blog::where("user_id", $user->id)->get();
+        //recuperation des blogs selon l'utilisateur qui est connecté
+        //$blogs_list = Blog::where("user_id", $user->id)->get();
 
-        
+        $blogs_list = $user->blogs;
+      
         return view('blog', compact("nom", "prenom", "blogs_list"));
     }
-
+    //methode pour afficher tous les articles
     public function all(){
         $user = Auth::user();
         $nom = $user ? $user->firstname:'';
@@ -39,31 +43,28 @@ class BlogController extends Controller
         } */
         //ou appeler auth de middelware au niveau de la route
 
-        //
-
-        $blogs_list = Blog::all();
+        $blogs_list = Blog::paginate(3);
 
         //$blogs_list = Blog::where("user_id", $user->id)->get();
 
-        
         return view('blog', compact("nom", "prenom", "blogs_list"));
     }
-
+    //methode pour afficher le formulaire d'ajout d'article
     public function createBlog(){
         return view('create-blog');
     }
-
+    //methode pour afficher les details d'un article
     public function show($id=null){
         $nom = 'Arso';
 
         $data = Blog::find($id); //Blog::where("id", $id)->first()
         $ids = idsDB();
-
+        //permet de revuperer les id dans un tableau
         //$ids = Blog::pluck("id")
 
         return view('blog', compact('nom', 'id', 'data'));
     }
-
+    //methode qui permet d'"nvoyer un article dans la BD
     public function store(Request $request){
 
         $data = $request->all();
@@ -73,7 +74,7 @@ class BlogController extends Controller
             "title" => "required",
             "picture" => "required|mimes:jpg,png",
         ]);
-
+        //on recupere le fichier dans la variable file, il ne faut pas oublier de mettre enctype au niveau du formulaire 
         $file = $request->file("picture");
         $image = null;
 
@@ -102,7 +103,7 @@ class BlogController extends Controller
         //creer un dossier sois meme sur le filesysteme 
 
         
-
+        //sauvegarder dans la BD avec $save
         $save = Blog::create([
             "title" => $data['title'],
             "content" => $data['content'],

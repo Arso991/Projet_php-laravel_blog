@@ -24,12 +24,19 @@
                         </div>
                         <small class="text-muted">9 min(s)</small>
                     </div>
-
+                    <p class="mt-2">
+                    @if ($item->user)
+                        Plubié par: <span class="text-success"> {{ $item->user->Fullname }} </span>
+                    @endif
+                    </p>
                 </div>
-
             </div>
         </div>
+        
+            
+        
         @endforeach
+        {{-- {{ $blogs_list->links() }} --}}
 
     @endif
 

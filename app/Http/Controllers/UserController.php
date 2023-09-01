@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\URL;
 
 class UserController extends Controller
 {
+    public function listUser(){
+        $list = User::active()->get();
+    }
     //fonction pour afficher la page de connexion
     public function login(){
         return view('login');
@@ -87,7 +90,8 @@ class UserController extends Controller
             abort(404);
         }
 
-        //faire la mise à jour pour mettre la date de la verification et la verification à true
+        //faire la mise à jour pour mettre la date de la verification et la verification à true pour signifier que
+        //l'email a été vérifié
         $user->update([
             "email_verified_at" => now(),
             "email_verified" => true
@@ -101,7 +105,7 @@ class UserController extends Controller
     public function recovery(){
         return view('recovery');
     }
-
+    //methode qui envoie le mail de récupération à partir d'un mail qui existe deja dans la BD
     public function change(Request $request){
 
         $data = $request->all();
@@ -114,9 +118,9 @@ class UserController extends Controller
             ]);
 
             $email = $data['email'];
-
+            //verifie si le mail existe deja dans la BD
             $exists = User::where('email', $email)->exists();
-
+            //si oui, envoie le mail pour passer sur la page de recuperation
             if($exists){
                 $host = URl::temporarySignedRoute('check', now() -> addMinutes(10), ['email' => $email]);
 
@@ -126,21 +130,21 @@ class UserController extends Controller
                             ->from($config['from']['address'], $config['from']['name'])
                             ->to($data['email']);
                 });
+                //sinon, retoure sur la page avec un message d'erreur
             }else{
                 return redirect()->back()->with('error', 'Veuillez entrer une addresse mail valide');
             }
 
             return redirect()->back()->with("validate", "Veuillez consulter votre mail pour renouveler votre mot de passe");
     }
-
+    //methode de la route temporaire
     public function check(Request $request, $email){
-
         $user = User::where('email', $email);
 
         if(!$user){
             abort(404);
         }
-
+        //verifie si la signature envoyée est toujours valide
         if(!$request->hasValidSignature()){
             return redirect()->route('recovery')->with('failed', 'Votre lien a expiré, veuillez reéssayer');
         }
@@ -148,7 +152,7 @@ class UserController extends Controller
         return view('changepassword', compact('email'));
         
     }
-
+    //methode qui met à jour le mot de passe
     public function updatepassword(Request $request, $email){
         $user = User::where('email', $email)->first();
 
@@ -168,12 +172,11 @@ class UserController extends Controller
 
             $user -> update([
                 "password" => Hash::make($data['password']),
-                "email_verified_at" => now()
             ]);
 
         return redirect()->back()->with('verified', 'Vous pouvez vous connecter avec votre nouveau mot de passe.');
     }
-
+    //methode pour faire l'authentification
     public function authentification(Request $request){
 
         $users = Auth::attempt([
@@ -189,7 +192,7 @@ class UserController extends Controller
         return redirect()->back()->with('error', '[Combinaison email/password invalide !]');
         /* dd(Auth::user()); */
     }
-
+    //mrthode pour se deconnecter
     public function logout(){
         Auth::logout();
         return redirect()->route('login');

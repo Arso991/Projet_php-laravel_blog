@@ -5,7 +5,7 @@
     </div>
     @endif
 
-    <h2>Liste des blogs de {{$nom}} @if(isset($id)) {{$id}} @endif </h2>
+    <h2>Liste des blogs  @if(isset($nom)) de {{$nom}} @endif </h2>
     <p class="lead text-muted">
         Il s'agit de la page qui permettra d'explorer les contours de laravel avec les étudiants!
     </p>
