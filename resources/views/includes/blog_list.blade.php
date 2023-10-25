@@ -32,9 +32,6 @@
                 </div>
             </div>
         </div>
-        
-            
-        
         @endforeach
         {{-- {{ $blogs_list->links() }} --}}
 

@@ -7,6 +7,7 @@
     </section>
     <section>
         @include('includes.blog_list')
+        <a href="{{ route('printBlog') }}" target="blank" class="btn btn-primary text-center">Imprimer les blogs</a>
     </section>
 @endsection
     

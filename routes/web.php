@@ -42,6 +42,7 @@ Route::controller(BlogController::class)->middleware('auth')->group(function(){
     Route::post('/blog/store', 'store')->name('blogStore');
     //route pour afficher le formulaire d'ajout d'un article
     Route::get('/create-blog', 'createBlog')->name('createBlog');
+    Route::get('print/blog', 'printblog')->name('printBlog');
 });
 
 /* Route::get('/', [BlogController::class, "index"])->name('index')->middleware('auth'); */
